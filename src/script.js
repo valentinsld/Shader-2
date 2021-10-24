@@ -1,3 +1,9 @@
-import './style.css'
+/* eslint-disable no-new */
+import './styles/style.css'
 
-console.log('hello world')
+//
+//  A P P
+//
+import App from './js/App'
+
+new App()
