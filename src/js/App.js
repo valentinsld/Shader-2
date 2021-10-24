@@ -1,6 +1,8 @@
-import { Renderer, Camera, Transform, Box, Program, Mesh } from 'ogl'
+import { Renderer, Camera, Transform, Box, Program, Mesh, Orbit, Vec3 } from 'ogl'
 import cubeVertex from '../shaders/cube.vert'
 import cubeFragment from '../shaders/cube.frag'
+
+import ShaderPlane from './ShaderPlane'
 
 class App {
   constructor() {
@@ -11,11 +13,19 @@ class App {
     this.camera = new Camera(this.gl)
     this.camera.position.z = 5
 
-    window.addEventListener('resize', this.resize, false)
+    // Create controls and pass parameters
+    this.controls = new Orbit(this.camera, {
+      target: new Vec3(0, 0, 0),
+    })
+
+    this.initTime = new Date()
+
+    window.addEventListener('resize', this.resize.bind(this), false)
     this.resize()
 
     this.initScene()
-    this.initBox()
+    // this.initBox()
+    this.initShader()
 
     this.update()
   }
@@ -43,11 +53,22 @@ class App {
     this.mesh.setParent(this.scene)
   }
 
-  update(t) {
-    requestAnimationFrame(this.update.bind(this))
+  initShader() {
+    this.shaderPlane = new ShaderPlane({
+      gl: this.gl,
+      scene: this.scene,
+      camera: this.camera,
+    })
+  }
 
-    this.mesh.rotation.y -= 0.04
-    this.mesh.rotation.x += 0.03
+  update() {
+    requestAnimationFrame(this.update.bind(this))
+    const time = (new Date() - this.initTime) / 1000
+
+    this.shaderPlane.update(time)
+
+    // Need to update controls every frame
+    this.controls.update()
     this.renderer.render({ scene: this.scene, camera: this.camera })
   }
 }
