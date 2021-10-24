@@ -1,4 +1,6 @@
 import { Renderer, Camera, Transform, Box, Program, Mesh } from 'ogl'
+import cubeVertex from '../shaders/cube.vert'
+import cubeFragment from '../shaders/cube.frag'
 
 class App {
   constructor() {
@@ -33,21 +35,8 @@ class App {
     const geometry = new Box(this.gl)
 
     const program = new Program(this.gl, {
-      vertex: `
-            attribute vec3 position;
-    
-            uniform mat4 modelViewMatrix;
-            uniform mat4 projectionMatrix;
-    
-            void main() {
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-            `,
-      fragment: `
-            void main() {
-                gl_FragColor = vec4(1.0);
-            }
-        `,
+      vertex: cubeVertex,
+      fragment: cubeFragment,
     })
 
     this.mesh = new Mesh(this.gl, { geometry, program })
