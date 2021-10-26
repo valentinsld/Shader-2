@@ -1,75 +1,96 @@
-import { Renderer, Camera, Transform, Box, Program, Mesh, Orbit, Vec3 } from 'ogl'
-import cubeVertex from '../shaders/cube.vert'
-import cubeFragment from '../shaders/cube.frag'
-
+import * as THREE from 'three'
+// eslint-disable-next-line import/extensions
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import * as dat from 'dat.gui'
 import ShaderPlane from './ShaderPlane'
 
 class App {
   constructor() {
-    this.renderer = new Renderer()
-    this.gl = this.renderer.gl
-    document.body.appendChild(this.gl.canvas)
+    // Debug
+    this.gui = new dat.GUI({ width: 340 })
 
-    this.camera = new Camera(this.gl)
-    this.camera.position.z = 5
+    // Canvas
+    this.canvas = document.querySelector('canvas.webgl')
 
-    // Create controls and pass parameters
-    this.controls = new Orbit(this.camera, {
-      target: new Vec3(0, 0, 0),
-    })
+    // Scene
+    this.scene = new THREE.Scene()
 
-    this.initTime = new Date()
+    this.sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    }
 
-    window.addEventListener('resize', this.resize.bind(this), false)
+    this.initCamera()
+    this.initRenderer()
     this.resize()
 
-    this.initScene()
-    // this.initBox()
-    this.initShader()
+    this.initPlane()
+
+    this.clock = new THREE.Clock()
+    this.initEvents()
+  }
+
+  initPlane() {
+    this.shaderPlane = new ShaderPlane({
+      scene: this.scene,
+    })
+  }
+
+  initCamera() {
+    // Base camera
+    this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
+    this.camera.position.set(1, 1, 1)
+    this.scene.add(this.camera)
+
+    // Controls
+    this.controls = new OrbitControls(this.camera, this.canvas)
+    this.controls.enableDamping = true
+  }
+
+  initRenderer() {
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+    })
+    this.renderer.setSize(this.sizes.width, this.sizes.height)
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  }
+
+  //
+  // Events
+  //
+  initEvents() {
+    window.addEventListener('resize', this.resize.bind(this))
 
     this.update()
   }
 
   resize() {
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
-    this.camera.perspective({
-      aspect: this.gl.canvas.width / this.gl.canvas.height,
-    })
+    // Update sizes
+    this.sizes.width = window.innerWidth
+    this.sizes.height = window.innerHeight
+
+    // Update camera
+    this.camera.aspect = this.sizes.width / this.sizes.height
+    this.camera.updateProjectionMatrix()
+
+    // Update renderer
+    this.renderer.setSize(this.sizes.width, this.sizes.height)
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   }
 
-  initScene() {
-    this.scene = new Transform()
-  }
-
-  initBox() {
-    const geometry = new Box(this.gl)
-
-    const program = new Program(this.gl, {
-      vertex: cubeVertex,
-      fragment: cubeFragment,
-    })
-
-    this.mesh = new Mesh(this.gl, { geometry, program })
-    this.mesh.setParent(this.scene)
-  }
-
-  initShader() {
-    this.shaderPlane = new ShaderPlane({
-      gl: this.gl,
-      scene: this.scene,
-      camera: this.camera,
-    })
-  }
-
+  //
+  // Update
+  //
   update() {
-    requestAnimationFrame(this.update.bind(this))
-    const time = (new Date() - this.initTime) / 1000
+    window.requestAnimationFrame(this.update.bind(this))
 
-    this.shaderPlane.update(time)
+    const elapsedTime = this.clock.getElapsedTime()
 
-    // Need to update controls every frame
+    // Update controls
     this.controls.update()
-    this.renderer.render({ scene: this.scene, camera: this.camera })
+
+    // Render
+    this.renderer.render(this.scene, this.camera)
   }
 }
 
