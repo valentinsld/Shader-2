@@ -1,6 +1,6 @@
 # Shader 2
 
-Test shader on OGL
+Test shader on THREE JS
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
