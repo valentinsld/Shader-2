@@ -1,13 +1,13 @@
 import * as THREE from 'three'
 // eslint-disable-next-line import/extensions
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'dat.gui'
+// import * as dat from 'dat.gui'
 import ShaderPlane from './ShaderPlane'
 
 class App {
   constructor() {
     // Debug
-    this.gui = new dat.GUI({ width: 340 })
+    // this.gui = new dat.GUI({ width: 340 })
 
     // Canvas
     this.canvas = document.querySelector('canvas.webgl')
