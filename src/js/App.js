@@ -39,7 +39,7 @@ class App {
   initCamera() {
     // Base camera
     this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
-    this.camera.position.set(1, 1, 1)
+    this.camera.position.set(3, 3, 3)
     this.scene.add(this.camera)
 
     // Controls
