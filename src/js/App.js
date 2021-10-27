@@ -89,6 +89,8 @@ class App {
     // Update controls
     this.controls.update()
 
+    this.shaderPlane.update(elapsedTime)
+
     // Render
     this.renderer.render(this.scene, this.camera)
   }
