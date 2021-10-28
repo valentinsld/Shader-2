@@ -1,6 +1,10 @@
+/* eslint-disable import/extensions */
 import * as THREE from 'three'
-// eslint-disable-next-line import/extensions
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js'
+
 // import * as dat from 'dat.gui'
 import ShaderPlane from './ShaderPlane'
 
@@ -45,6 +49,8 @@ class App {
     // Controls
     this.controls = new OrbitControls(this.camera, this.canvas)
     this.controls.enableDamping = true
+    this.controls.enablePan = false
+    this.controls.enableZoom = false
   }
 
   initRenderer() {
@@ -53,6 +59,17 @@ class App {
     })
     this.renderer.setSize(this.sizes.width, this.sizes.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    // postprocessing
+    this.composer = new EffectComposer(this.renderer)
+    this.composer.addPass(new RenderPass(this.scene, this.camera))
+
+    this.afterimagePass = new AfterimagePass()
+    this.composer.addPass(this.afterimagePass)
+
+    window.addEventListener('resize', this.resize.bind(this))
+
+    if (typeof TESTING !== 'undefined') { for (let i = 0; i < 1; i++) { this.render() } }
   }
 
   //
@@ -76,6 +93,9 @@ class App {
     // Update renderer
     this.renderer.setSize(this.sizes.width, this.sizes.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    this.composer.setSize(this.sizes.width, this.sizes.height)
+    this.composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   }
 
   //
@@ -92,7 +112,12 @@ class App {
     this.shaderPlane.update(elapsedTime)
 
     // Render
-    this.renderer.render(this.scene, this.camera)
+    this.render()
+  }
+
+  render() {
+    // console.log(this.composer)
+    this.composer.render()
   }
 }
 
