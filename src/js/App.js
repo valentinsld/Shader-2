@@ -48,9 +48,15 @@ class App {
 
     // Controls
     this.controls = new OrbitControls(this.camera, this.canvas)
-    this.controls.enableDamping = true
-    this.controls.enablePan = false
-    this.controls.enableZoom = false
+    this.controls.maxPolarAngle = Math.PI * 0.495
+    this.controls.minPolarAngle = Math.PI * 0.03
+    this.controls.target.set(0, 0, 0)
+    this.controls.minDistance = 2
+    this.controls.maxDistance = 10
+    this.controls.zoomSpeed = 0.5
+    this.controls.panSpeed = 0.5
+    this.controls.rotateSpeed = 0.5
+    this.controls.update()
   }
 
   initRenderer() {
