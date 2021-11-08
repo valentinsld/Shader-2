@@ -12,7 +12,7 @@ class ShaderPlane {
 
   init() {
     // Geometry
-    const waterGeometry = new THREE.PlaneGeometry(5, 5, 2048, 2048)
+    const waterGeometry = new THREE.PlaneGeometry(5, 5, 2048 * 2, 2048 * 2)
 
     // Material
     const waterMaterial = new THREE.ShaderMaterial({
