@@ -12,7 +12,7 @@ class App {
   constructor() {
     // Debug
     // this.gui = new dat.GUI({ width: 340 })
-    this.isNFT = window.location.hash !== '#NFT'
+    this.isNFT = window.location.hash === 'NFT'
 
     // Canvas
     this.canvas = document.querySelector('canvas.webgl')
