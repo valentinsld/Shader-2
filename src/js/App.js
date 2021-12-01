@@ -87,7 +87,7 @@ class App {
   initEvents() {
     window.addEventListener('resize', this.resize.bind(this))
 
-    this.update()
+    if (this.isNFT) this.update()
   }
 
   resize() {
