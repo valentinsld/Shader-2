@@ -12,7 +12,7 @@ class App {
   constructor() {
     // Debug
     // this.gui = new dat.GUI({ width: 340 })
-    this.isNFT = window.location.hash === 'NFT'
+    this.isNFT = window.location.hash === '#NFT'
 
     // Canvas
     this.canvas = document.querySelector('canvas.webgl')
@@ -87,7 +87,7 @@ class App {
   initEvents() {
     window.addEventListener('resize', this.resize.bind(this))
 
-    if (this.isNFT) this.update()
+    if (!this.isNFT) this.update()
   }
 
   resize() {
@@ -111,7 +111,7 @@ class App {
   // Update
   //
   update(t) {
-    if (this.isNFT) window.requestAnimationFrame(this.update.bind(this, undefined))
+    if (!this.isNFT) window.requestAnimationFrame(this.update.bind(this, undefined))
 
     const elapsedTime = t || this.clock.getElapsedTime()
 
