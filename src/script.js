@@ -1,4 +1,4 @@
-/* eslint-disable no-new */
+/* eslint-disable */
 import './styles/style.css'
 
 //
@@ -6,4 +6,5 @@ import './styles/style.css'
 //
 import App from './js/App'
 
-new App()
+var APP = new App()
+document.app = APP

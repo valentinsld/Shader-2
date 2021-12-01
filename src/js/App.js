@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js'
@@ -23,6 +23,7 @@ class App {
       width: window.innerWidth,
       height: window.innerHeight,
     }
+    this.radiusCamera = 2.6
 
     this.initCamera()
     this.initRenderer()
@@ -43,20 +44,21 @@ class App {
   initCamera() {
     // Base camera
     this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
-    this.camera.position.set(3, 3, 3)
+    this.camera.position.set(this.radiusCamera, 3.8, this.radiusCamera)
+    this.camera.zoom = 0.97
     this.scene.add(this.camera)
 
     // Controls
-    this.controls = new OrbitControls(this.camera, this.canvas)
-    this.controls.maxPolarAngle = Math.PI * 0.495
-    this.controls.minPolarAngle = Math.PI * 0.03
-    this.controls.target.set(0, 0, 0)
-    this.controls.minDistance = 2
-    this.controls.maxDistance = 10
-    this.controls.zoomSpeed = 0.5
-    this.controls.panSpeed = 0.5
-    this.controls.rotateSpeed = 0.5
-    this.controls.update()
+    // this.controls = new OrbitControls(this.camera, this.canvas)
+    // this.controls.maxPolarAngle = Math.PI * 0.495
+    // this.controls.minPolarAngle = Math.PI * 0.03
+    // this.controls.target.set(0, 0, 0)
+    // this.controls.minDistance = 2
+    // this.controls.maxDistance = 10
+    // this.controls.zoomSpeed = 0.5
+    // this.controls.panSpeed = 0.5
+    // this.controls.rotateSpeed = 0.5
+    // this.controls.update()
   }
 
   initRenderer() {
@@ -70,7 +72,7 @@ class App {
     this.composer = new EffectComposer(this.renderer)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
 
-    this.afterimagePass = new AfterimagePass()
+    this.afterimagePass = new AfterimagePass(0.95)
     this.composer.addPass(this.afterimagePass)
 
     window.addEventListener('resize', this.resize.bind(this))
@@ -113,7 +115,13 @@ class App {
     const elapsedTime = this.clock.getElapsedTime()
 
     // Update controls
-    this.controls.update()
+    // this.controls.update()
+    this.camera.position.set(
+      this.radiusCamera + Math.cos(elapsedTime),
+      this.camera.position.y,
+      this.radiusCamera + Math.sin(elapsedTime),
+    )
+    this.camera.lookAt(new THREE.Vector3())
 
     this.shaderPlane.update(elapsedTime)
 
