@@ -7,4 +7,4 @@ import './styles/style.css'
 import App from './js/App'
 
 var APP = new App()
-document.app = APP
+window.app = APP
