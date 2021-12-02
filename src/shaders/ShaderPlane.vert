@@ -88,6 +88,8 @@ float loopNoise3d(vec2 val, float time, float loopDuration, float speed) {
     float v2 = getPerlinNoise3d(vec3(val,(loopTime - loopDuration) * speed));
     //mix over loopDuration
     return  mix(v1, v2, loopTime/loopDuration);
+    // TODO : styler :
+    // return  loopTime/loopDuration;
 }
 
 void main()
@@ -99,7 +101,7 @@ void main()
 
   float distanceCenter = 1.0 - distance(uv,vec2(0.5)) * 2.0;
   float circled = smoothstep(0.0, 0.2, distanceCenter);
-  float elevation = loopNoise3d(vec2(modelPosition.xz), uTime, M_PI * 4.0, 1.0) * circled;
+  float elevation = loopNoise3d(vec2(modelPosition.xz), uTime, M_PI * .4, 1.0) * circled;
     elevation = step(0.1, mod(elevation, 0.12));
   gl_Position.y += elevation * 1.14;
 
